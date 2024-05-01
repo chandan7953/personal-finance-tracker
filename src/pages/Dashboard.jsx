@@ -7,11 +7,11 @@ import { auth, db } from "../firebase";
 import Cards from "../components/Cards";
 import AddExpenseModal from "../components/AddExpenseModal";
 import AddIncomeModal from "../components/AddIncomeModal";
-import moment from "moment";
 import Loader from "../components/Loader";
 import NoTransactions from "../components/NoTransactions";
 import TransactionSearch from "../components/TransactionSearch";
 import { unparse } from "papaparse";
+import dayjs from "dayjs";
 
 const Dashboard = () => {
   const cardStyle = {
@@ -150,7 +150,7 @@ const Dashboard = () => {
   const onFinish = (values, type) => {
     const newTransaction = {
       type: type,
-      date: moment(values.date).format("YYYY-MM-DD"),
+      date: dayjs(values.date).format("YYYY-MM-DD"),
       amount: parseFloat(values.amount),
       tag: values.tag,
       name: values.name,
