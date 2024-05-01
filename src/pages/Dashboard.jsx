@@ -12,6 +12,7 @@ import NoTransactions from "../components/NoTransactions";
 import TransactionSearch from "../components/TransactionSearch";
 import { unparse } from "papaparse";
 import dayjs from "dayjs";
+import TransactionChart from "../components/TransactionChart";
 
 const Dashboard = () => {
   const cardStyle = {
@@ -207,13 +208,7 @@ const Dashboard = () => {
           />
 
           {/* charts section  */}
-          {transactions.length == 0 ? (
-            <NoTransactions />
-          ) : (
-            <>
-              <p>here i have to do</p>
-            </>
-          )}
+          {transactions.length == 0 ? <NoTransactions /> : <TransactionChart />}
 
           {/* table Section  */}
           <TransactionSearch
