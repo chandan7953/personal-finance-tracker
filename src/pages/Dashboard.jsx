@@ -8,6 +8,10 @@ import Cards from "../components/Cards";
 import AddExpenseModal from "../components/AddExpenseModal";
 import AddIncomeModal from "../components/AddIncomeModal";
 import moment from "moment";
+import Loader from "../components/Loader";
+import NoTransactions from "../components/NoTransactions";
+import TransactionSearch from "../components/TransactionSearch";
+import { unparse } from "papaparse";
 
 const Dashboard = () => {
   const cardStyle = {
@@ -159,30 +163,67 @@ const Dashboard = () => {
     calculateBalance();
   };
 
+  function exportToCsv() {
+    const csv = unparse(transactions, {
+      fields: ["name", "type", "date", "amount", "tag"],
+    });
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "transactions.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
   return (
     <div>
-      <Header />
-      <Cards
-        currentBalance={currentBalance}
-        income={income}
-        expenses={expenses}
-        showExpenseModal={showExpenseModal}
-        showIncomeModal={showIncomeModal}
-        cardStyle={cardStyle}
-        reset={reset}
-      />
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          <Header />
+          <Cards
+            currentBalance={currentBalance}
+            income={income}
+            expenses={expenses}
+            showExpenseModal={showExpenseModal}
+            showIncomeModal={showIncomeModal}
+            cardStyle={cardStyle}
+            reset={reset}
+          />
 
-      <AddIncomeModal
-        isIncomeModalVisible={isIncomeModalVisible}
-        handleIncomeCancel={handleIncomeCancel}
-        onFinish={onFinish}
-      />
-      <AddExpenseModal
-        isExpenseModalVisible={isExpenseModalVisible}
-        handleExpenseCancel={handleExpenseCancel}
-        onFinish={onFinish}
-        currentBalance={currentBalance}
-      />
+          <AddIncomeModal
+            isIncomeModalVisible={isIncomeModalVisible}
+            handleIncomeCancel={handleIncomeCancel}
+            onFinish={onFinish}
+          />
+          <AddExpenseModal
+            isExpenseModalVisible={isExpenseModalVisible}
+            handleExpenseCancel={handleExpenseCancel}
+            onFinish={onFinish}
+            currentBalance={currentBalance}
+          />
+
+          {/* charts section  */}
+          {transactions.length == 0 ? (
+            <NoTransactions />
+          ) : (
+            <>
+              <p>here i have to do</p>
+            </>
+          )}
+
+          {/* table Section  */}
+          <TransactionSearch
+            transactions={transactions}
+            exportToCsv={exportToCsv}
+            fetchTransactions={fetchTransactions}
+            addTransaction={addTransaction}
+          />
+        </>
+      )}
     </div>
   );
 };
