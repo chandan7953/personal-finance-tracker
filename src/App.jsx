@@ -9,6 +9,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase";
 import { Suspense, lazy } from "react";
 import Loader from "./components/Loader";
+import { ToastContainer } from "react-toastify";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const SignUpSignIn = lazy(() => import("./pages/Signup"));
@@ -19,6 +20,7 @@ const App = () => {
   return (
     <Router>
       <Suspense fallback={<Loader />}>
+        <ToastContainer />
         <Routes>
           <Route
             path="/"

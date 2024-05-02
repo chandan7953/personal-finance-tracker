@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Table, Select, Radio } from "antd";
+import { Table, Select, Row, Col, Radio } from "antd";
+
 import search from "../assets/search.svg";
 import { parse } from "papaparse";
 import { toast } from "react-toastify";
@@ -107,15 +108,14 @@ const TransactionSearch = ({
   return (
     <div
       style={{
-        width: "100%",
-        padding: "0rem 2rem",
+        margin: "1rem",
       }}
     >
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
-          gap: "1rem",
+          gap: "2rem",
           alignItems: "center",
           marginBottom: "1rem",
         }}
@@ -151,52 +151,57 @@ const TransactionSearch = ({
         <Option value="office">Office</Option>
       </Select> */}
       <div className="my-table">
+        <Row
+          justify="space-between"
+          align="middle"
+          style={{ marginBottom: "1rem" }}
+        >
+          <Col>
+            <h2>My Transactions</h2>
+          </Col>
+          <Col>
+            <Radio.Group
+              className="input-radio"
+              onChange={(e) => setSortKey(e.target.value)}
+              value={sortKey}
+            >
+              <Radio.Button value="">No Sort</Radio.Button>
+              <Radio.Button value="date">Sort by Date</Radio.Button>
+              <Radio.Button value="amount">Sort by Amount</Radio.Button>
+            </Radio.Group>
+          </Col>
+          <Col>
+            <Row gutter={16}>
+              <Col>
+                <button className="btn" onClick={exportToCsv}>
+                  Export to CSV
+                </button>
+              </Col>
+              <Col>
+                <label htmlFor="file-csv" className="btn btn-blue">
+                  Import from CSV
+                </label>
+                <input
+                  onChange={importFromCsv}
+                  id="file-csv"
+                  type="file"
+                  accept=".csv"
+                  required
+                  style={{ display: "none" }}
+                />
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+
         <div
           style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-            marginBottom: "1rem",
+            maxWidth: "100%",
+            overflowX: "auto",
           }}
         >
-          <h2>My Transactions</h2>
-
-          <Radio.Group
-            className="input-radio"
-            onChange={(e) => setSortKey(e.target.value)}
-            value={sortKey}
-          >
-            <Radio.Button value="">No Sort</Radio.Button>
-            <Radio.Button value="date">Sort by Date</Radio.Button>
-            <Radio.Button value="amount">Sort by Amount</Radio.Button>
-          </Radio.Group>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: "1rem",
-              width: "400px",
-            }}
-          >
-            <button className="btn" onClick={exportToCsv}>
-              Export to CSV
-            </button>
-            <label htmlFor="file-csv" className="btn btn-blue">
-              Import from CSV
-            </label>
-            <input
-              onChange={importFromCsv}
-              id="file-csv"
-              type="file"
-              accept=".csv"
-              required
-              style={{ display: "none" }}
-            />
-          </div>
+          <Table columns={columns} dataSource={dataSource} />
         </div>
-
-        <Table columns={columns} dataSource={dataSource} />
       </div>
     </div>
   );

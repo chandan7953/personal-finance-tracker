@@ -17,9 +17,8 @@ import TransactionChart from "../components/TransactionChart";
 const Dashboard = () => {
   const cardStyle = {
     boxShadow: "0px 0px 30px 8px rgba(227, 227, 227, 0.75)",
-    margin: "2rem",
+    margin: "1rem",
     borderRadius: "0.5rem",
-    minWidth: "400px",
     flex: 1,
   };
   const [user] = useAuthState(auth);
@@ -183,7 +182,7 @@ const Dashboard = () => {
       {loading ? (
         <Loader />
       ) : (
-        <>
+        <div>
           <Header />
           <Cards
             currentBalance={currentBalance}
@@ -208,7 +207,14 @@ const Dashboard = () => {
           />
 
           {/* charts section  */}
-          {transactions.length == 0 ? <NoTransactions /> : <TransactionChart />}
+          {transactions.length == 0 ? (
+            <NoTransactions />
+          ) : (
+            <TransactionChart
+              transactions={transactions}
+              cardStyle={cardStyle}
+            />
+          )}
 
           {/* table Section  */}
           <TransactionSearch
@@ -217,7 +223,7 @@ const Dashboard = () => {
             fetchTransactions={fetchTransactions}
             addTransaction={addTransaction}
           />
-        </>
+        </div>
       )}
     </div>
   );

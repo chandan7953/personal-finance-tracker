@@ -1,57 +1,68 @@
-import { Card } from "antd";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import LineChart from "./LineChart";
 import PieChart from "./PieChart";
+import { Row, Col, Card } from "antd";
 
-const TransactionChart = () => {
+const TransactionChart = ({ transactions, cardStyle }) => {
+  const [data, setData] = useState([...transactions]);
+
+  // Update data state when transactions prop changes
+  useEffect(() => {
+    setData([...transactions]);
+  }, [transactions]);
+
+  const processChartData = () => {
+    let sortedTransactions = [...data].sort(
+      (a, b) => new Date(a.date) - new Date(b.date)
+    );
+
+    let initialAmount = 0;
+    const chartDataSort = sortedTransactions.map((item) => {
+      initialAmount += item.type === "expense" ? -item.amount : item.amount;
+      return { date: item.date, amount: initialAmount };
+    });
+
+    const spendingData = {};
+    sortedTransactions.forEach((transaction) => {
+      if (transaction.type === "expense") {
+        const tag = transaction.tag;
+        spendingData[tag] = (spendingData[tag] || 0) + transaction.amount;
+      }
+    });
+
+    const pieData = Object.entries(spendingData).map(([category, value]) => ({
+      category,
+      value,
+    }));
+
+    return { chartDataSort, pieData };
+  };
+
+  const { chartDataSort, pieData } = processChartData();
+
   return (
     <>
-      <div
+      <Row
         style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: "2rem",
-          margin: "2rem",
+          width: "100%",
         }}
       >
-        <div
-          style={{
-            width: "65%",
-          }}
-        >
-          <Card
-            bordered={true}
-            style={{
-              height: "520px",
-              boxShadow: "0px 0px 30px 8px rgba(227, 227, 227, 0.75)",
-              borderRadius: "0.5rem",
-              flex: 1,
-            }}
-          >
-            <LineChart />
+        <Col xs={24} sm={24} md={12} lg={16} xl={16}>
+          <Card bordered={true} style={cardStyle}>
+            <LineChart chartDataSort={chartDataSort} />
           </Card>
-        </div>
-
-        <div
-          style={{
-            width: "30%",
-          }}
-        >
-          <Card
-            bordered={true}
-            style={{
-              height: "520px",
-              boxShadow: "0px 0px 30px 8px rgba(227, 227, 227, 0.75)",
-              borderRadius: "0.5rem",
-              flex: 0.45,
-            }}
-          >
-            <PieChart />
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+          <Card bordered={true} style={{ ...cardStyle }}>
+            <h2>Total Spending</h2>
+            {pieData.length === 0 ? (
+              <p>Seems like you haven't spent anything till now...</p>
+            ) : (
+              <PieChart pieData={pieData} />
+            )}
           </Card>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </>
   );
 };

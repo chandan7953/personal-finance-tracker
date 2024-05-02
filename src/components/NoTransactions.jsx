@@ -1,25 +1,22 @@
 import React from "react";
 import transactions from "../assets/transactions.svg";
+
 function NoTransactions() {
   return (
     <div
       style={{
         display: "flex",
+        flexWrap: "wrap",
         justifyContent: "center",
         alignItems: "center",
-        width: "100%",
         flexDirection: "column",
-        marginBottom: "2rem",
       }}
     >
-      <img
-        src={transactions}
-        alt="No Transzction"
-        style={{ width: "400px", margin: "4rem" }}
-      />
-      <p style={{ textAlign: "center", fontSize: "1.2rem" }}>
+      <img src={transactions} alt="No Transaction" className="no-transaction" />
+
+      <span style={{ textAlign: "center", fontSize: "1rem" }}>
         You Have No Transactions Currently
-      </p>
+      </span>
     </div>
   );
 }

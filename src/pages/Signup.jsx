@@ -225,7 +225,7 @@ const SignUpSignIn = () => {
               </div>
 
               <button type="submit" className="btn">
-                {loading ? "Loading..." : "Sign Up with Email and Password"}
+                {loading ? "Loading..." : "Sign Up Now"}
               </button>
             </form>
             <p style={{ textAlign: "center", margin: 0 }}>or</p>
